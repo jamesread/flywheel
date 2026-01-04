@@ -53,13 +53,13 @@ All data is stored locally in your browser's local storage.
 ### Build Docker Image
 
 ```bash
-docker build -t flywheel-frontend .
+docker build -t flywheel .
 ```
 
 ### Run Docker Container
 
 ```bash
-docker run -p 8080:80 flywheel-frontend
+docker run -p 8080:80 flywheel
 ```
 
 The app will be available at `http://localhost:8080`
@@ -73,10 +73,10 @@ After the GitHub Actions workflow runs, you can pull and run the image:
 echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
 
 # Pull the image
-docker pull ghcr.io/OWNER/REPO/flywheel-frontend:latest
+docker pull ghcr.io/OWNER/REPO/flywheel:latest
 
 # Run the container
-docker run -p 8080:80 ghcr.io/OWNER/REPO/flywheel-frontend:latest
+docker run -p 8080:80 ghcr.io/OWNER/REPO/flywheel:latest
 ```
 
 Replace `OWNER/REPO` with your GitHub username and repository name.

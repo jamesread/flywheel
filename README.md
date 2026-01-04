@@ -69,7 +69,7 @@ Releases are automated using [semantic-release](https://semantic-release.gitbook
 ## Docker
 
 ```bash
-docker run -p 8080:80 ghcr.io/jamesread/flywheel/flywheel-frontend:latest
+docker run -p 8080:80 ghcr.io/jamesread/flywheel:latest
 ```
 
 ## Tech Stack
