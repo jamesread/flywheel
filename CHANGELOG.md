@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/jamesread/flywheel/compare/v1.1.0...v1.2.0) (2026-01-05)
+
+
+### Features
+
+* enhance edit list page with reordering, hidden switcher, and version display ([5167d29](https://github.com/jamesread/flywheel/commit/5167d29119906e4c945d0514767719fec2156a0f))
+
 # [1.1.0](https://github.com/jamesread/flywheel/compare/v1.0.0...v1.1.0) (2026-01-04)
 
 
