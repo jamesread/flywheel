@@ -30,6 +30,14 @@ export function deleteHabit(habitId) {
   saveHabits(filtered)
 }
 
+export function reorderHabits(newOrder) {
+  // newOrder is an array of habit IDs in the desired order
+  const habits = getHabits()
+  const habitMap = new Map(habits.map(h => [h.id, h]))
+  const reordered = newOrder.map(id => habitMap.get(id)).filter(Boolean)
+  saveHabits(reordered)
+}
+
 export function getTodayDateString() {
   const today = new Date()
   return today.toISOString().split('T')[0] // Returns YYYY-MM-DD
@@ -52,13 +60,13 @@ export function toggleTick(habitId) {
   const today = getTodayDateString()
   const tickedIds = getTicksForDate(today)
   const index = tickedIds.indexOf(habitId)
-  
+
   if (index > -1) {
     tickedIds.splice(index, 1)
   } else {
     tickedIds.push(habitId)
   }
-  
+
   saveTicksForDate(today, tickedIds)
   return tickedIds
 }

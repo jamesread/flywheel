@@ -19,11 +19,19 @@
     </div>
 
     <header class="header">
-      <h1>Flywheel</h1>
+      <h1
+        @click="toggleSwitcher"
+        @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd"
+        class="title-clickable"
+      >
+        Flywheel
+      </h1>
       <p class="subtitle">Build habits, one day at a time</p>
     </header>
 
-    <div class="mode-toggle">
+    <div v-if="showSwitcher" class="mode-toggle">
       <button
         :class="['mode-btn', { active: mode === 'check' }]"
         @click="mode = 'check'"
@@ -34,7 +42,7 @@
         :class="['mode-btn', { active: mode === 'add' }]"
         @click="mode = 'add'"
       >
-        Add to List
+        Edit List
       </button>
     </div>
 
@@ -42,7 +50,7 @@
       <!-- Check List Mode (Default) -->
       <div v-if="mode === 'check'" class="check-list">
         <div v-if="habits.length === 0" class="empty-state">
-          <p>No habits yet. Switch to "Add to List" to create your first habit!</p>
+          <p>No habits yet. Switch to "Edit List" to create your first habit!</p>
         </div>
         <div v-else>
           <div class="date-display">
@@ -67,7 +75,7 @@
         </div>
       </div>
 
-      <!-- Add to List Mode -->
+      <!-- Edit List Mode -->
       <div v-if="mode === 'add'" class="add-list">
         <div class="add-form">
           <input
@@ -83,10 +91,21 @@
         </div>
         <div v-if="habits.length > 0" class="habits-list">
           <div
-            v-for="habit in habits"
+            v-for="(habit, index) in habits"
             :key="habit.id"
             class="habit-item delete-mode"
+            :class="{
+              'dragging': draggedIndex === index,
+              'drag-over': draggedOverIndex === index && draggedIndex !== index
+            }"
+            draggable="true"
+            @dragstart="handleDragStart(index)"
+            @dragover="handleDragOver($event, index)"
+            @dragleave="handleDragLeave"
+            @drop="handleDrop($event, index)"
+            @dragend="handleDragEnd"
           >
+            <span class="drag-handle" title="Drag to reorder">⋮⋮</span>
             <span class="habit-name">{{ habit.name }}</span>
             <button @click="deleteHabit(habit.id)" class="delete-btn" title="Delete habit">
               ×
@@ -98,6 +117,12 @@
         </div>
       </div>
     </main>
+
+    <footer class="footer">
+      <p class="version-info">
+        App v{{ appVersion }} | Cache v{{ cacheVersion }}
+      </p>
+    </footer>
   </div>
 </template>
 
@@ -107,6 +132,7 @@ import {
   getHabits,
   addHabit as addHabitToStorage,
   deleteHabit as deleteHabitFromStorage,
+  reorderHabits,
   isTicked,
   toggleTick
 } from './utils/storage.js'
@@ -117,6 +143,16 @@ const habits = ref([])
 const newHabitName = ref('')
 
 const formattedDate = ref('')
+const showSwitcher = ref(false) // Hidden by default
+
+// Version info
+// @ts-ignore - Injected by Vite
+const appVersion = ref(typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0')
+const cacheVersion = ref('')
+
+// Drag and drop state
+const draggedIndex = ref(null)
+const draggedOverIndex = ref(null)
 
 // Install prompt functionality
 const { isInstallable, isInstalled, promptInstall } = useInstallPrompt()
@@ -168,15 +204,132 @@ function toggleHabit(habitId) {
   habits.value = [...habits.value]
 }
 
+function handleDragStart(index) {
+  draggedIndex.value = index
+}
+
+function handleDragOver(e, index) {
+  e.preventDefault()
+  draggedOverIndex.value = index
+}
+
+function handleDragLeave() {
+  draggedOverIndex.value = null
+}
+
+function handleDrop(e, dropIndex) {
+  e.preventDefault()
+  if (draggedIndex.value === null || draggedIndex.value === dropIndex) {
+    draggedIndex.value = null
+    draggedOverIndex.value = null
+    return
+  }
+
+  const newHabits = [...habits.value]
+  const [draggedHabit] = newHabits.splice(draggedIndex.value, 1)
+  newHabits.splice(dropIndex, 0, draggedHabit)
+
+  habits.value = newHabits
+  reorderHabits(newHabits.map(h => h.id))
+
+  draggedIndex.value = null
+  draggedOverIndex.value = null
+}
+
+function handleDragEnd() {
+  draggedIndex.value = null
+  draggedOverIndex.value = null
+}
+
+function toggleSwitcher() {
+  showSwitcher.value = !showSwitcher.value
+}
+
+// Touch event handlers for better mobile support
+let touchStartTime = 0
+let touchMoved = false
+let touchStartY = 0
+
+function handleTouchStart(e) {
+  touchStartTime = Date.now()
+  touchMoved = false
+  touchStartY = e.touches[0].clientY
+  // Add visual feedback
+  e.currentTarget.classList.add('touching')
+}
+
+function handleTouchMove(e) {
+  if (e.touches.length > 0) {
+    const touchY = e.touches[0].clientY
+    const deltaY = Math.abs(touchY - touchStartY)
+    // If moved more than 10px, consider it a drag/swipe
+    if (deltaY > 10) {
+      touchMoved = true
+      e.currentTarget.classList.remove('touching')
+    }
+  }
+}
+
+function handleTouchEnd(e) {
+  const touchDuration = Date.now() - touchStartTime
+  e.currentTarget.classList.remove('touching')
+
+  // Only toggle if it was a quick tap (not a drag/swipe)
+  if (!touchMoved && touchDuration < 300) {
+    e.preventDefault()
+    toggleSwitcher()
+  }
+
+  // Reset state
+  touchMoved = false
+}
+
+function getCacheVersion() {
+  // Try to get service worker version from URL
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    const swUrl = navigator.serviceWorker.controller.scriptURL
+    // Extract version hash from SW URL if available (format: sw.js?v=hash)
+    const match = swUrl.match(/[?&]v=([^&]+)/)
+    if (match) {
+      return match[1].substring(0, 8)
+    }
+    // Fallback: use hash of the URL itself
+    const urlHash = swUrl.split('/').pop().replace(/[^a-z0-9]/gi, '').substring(0, 8)
+    if (urlHash) {
+      return urlHash
+    }
+  }
+
+  // Fallback: use stored version or generate one
+  const storedVersion = localStorage.getItem('flywheel_cache_version')
+  if (storedVersion) {
+    return storedVersion.substring(0, 8)
+  }
+
+  // Generate a version based on current time (for development/initial load)
+  const version = Date.now().toString(36)
+  localStorage.setItem('flywheel_cache_version', version)
+  return version.substring(0, 8)
+}
+
 onMounted(() => {
   updateDate()
   loadHabits()
+  cacheVersion.value = getCacheVersion()
+
   // Update date every minute to keep it current
   setInterval(updateDate, 60000)
-  
+
   // Check if install banner was dismissed
   if (localStorage.getItem('flywheel_install_dismissed') === 'true') {
     showInstallBanner.value = false
+  }
+
+  // Listen for service worker updates to update cache version
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      cacheVersion.value = getCacheVersion()
+    })
   }
 })
 </script>
@@ -207,6 +360,28 @@ onMounted(() => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.title-clickable {
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  /* Ensure minimum touch target size (44x44px) */
+  min-height: 44px;
+  display: inline-block;
+  padding: 0.5rem 0;
+}
+
+.title-clickable:hover {
+  opacity: 0.8;
+}
+
+.title-clickable:active,
+.title-clickable.touching {
+  opacity: 0.7;
+  transform: scale(0.98);
 }
 
 .subtitle {
@@ -332,6 +507,36 @@ onMounted(() => {
 .habit-item.delete-mode {
   justify-content: space-between;
   cursor: default;
+  position: relative;
+}
+
+.habit-item.delete-mode.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.habit-item.delete-mode.drag-over {
+  border-top: 3px solid #4f46e5;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0 0.5rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.2em;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.habit-item.delete-mode:hover .drag-handle {
+  color: #6b7280;
 }
 
 .checkbox {
@@ -477,6 +682,20 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.3);
 }
 
+.footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+.version-info {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-family: monospace;
+}
+
 @media (max-width: 640px) {
   .install-banner-content {
     flex-direction: column;
@@ -550,6 +769,26 @@ onMounted(() => {
 
   .delete-btn:hover {
     background: #991b1b;
+  }
+
+  .drag-handle {
+    color: #6b7280;
+  }
+
+  .habit-item.delete-mode:hover .drag-handle {
+    color: #9ca3af;
+  }
+
+  .habit-item.delete-mode.drag-over {
+    border-top-color: #818cf8;
+  }
+
+  .footer {
+    border-top-color: #374151;
+  }
+
+  .version-info {
+    color: #6b7280;
   }
 }
 </style>

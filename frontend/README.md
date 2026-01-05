@@ -6,7 +6,7 @@ A simple, client-side only Progressive Web App (PWA) built with Vue 3 and Vite t
 
 - **Two Modes:**
   - **Check List** (default): View and tick off your habits for today
-  - **Add to List**: Add new habits or delete existing ones
+  - **Edit List**: Add new habits or delete existing ones
 
 - **Daily Tracking**: Ticks are stored per day in local storage
 - **PWA Support**: Installable as a Progressive Web App
@@ -42,9 +42,9 @@ npm run preview
 
 ## How to Use
 
-1. **Add Habits**: Switch to "Add to List" mode and enter habit names (e.g., "Brush Teeth")
+1. **Add Habits**: Switch to "Edit List" mode and enter habit names (e.g., "Brush Teeth")
 2. **Track Daily**: Switch to "Check List" mode (default) and tick off completed habits for today
-3. **Manage Habits**: In "Add to List" mode, you can delete habits you no longer want to track
+3. **Manage Habits**: In "Edit List" mode, you can delete habits you no longer want to track
 
 All data is stored locally in your browser's local storage.
 

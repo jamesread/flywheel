@@ -13,4 +13,9 @@ const updateSW = registerSW({
   },
 })
 
+// Store SW update function globally for App component access
+if (typeof window !== 'undefined') {
+  window.__SW_UPDATE__ = updateSW
+}
+
 createApp(App).mount('#app')
