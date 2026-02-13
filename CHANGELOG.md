@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/jamesread/flywheel/compare/v1.2.0...v1.3.0) (2026-02-13)
+
+
+### Features
+
+* Nicer flywheel icon ([b48c73b](https://github.com/jamesread/flywheel/commit/b48c73b937adfcc44e3a3425c838cbd97c29c02d))
+
 # [1.2.0](https://github.com/jamesread/flywheel/compare/v1.1.0...v1.2.0) (2026-01-05)
 
 
