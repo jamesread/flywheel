@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/jamesread/flywheel/compare/v1.3.1...v1.3.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* icon ([686ed04](https://github.com/jamesread/flywheel/commit/686ed0496880f84e179ebf7fb2f0c4b867b59fa4))
+
 ## [1.3.1](https://github.com/jamesread/flywheel/compare/v1.3.0...v1.3.1) (2026-02-13)
 
 
