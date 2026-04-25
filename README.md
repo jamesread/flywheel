@@ -1,5 +1,5 @@
 <div align = "center">
-  <img alt = "Flywheel logo" src = "https://raw.githubusercontent.com/jamesread/flywheel/main/frontend/public/icon.svg" width = "128" />
+  <img alt = "Flywheel logo" src = "https://raw.githubusercontent.com/jamesread/flywheel/main/logo.svg" width = "128" />
   <h1>Flywheel</h1>
 
   A simple, client-side only Progressive Web App (PWA) for building habits.
