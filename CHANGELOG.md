@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/jamesread/flywheel/compare/v1.3.2...v1.3.3) (2026-10-02)
+
+
+### Bug Fixes
+
+* **frontend:** nginx on read-only root fs ([1acd744](https://github.com/jamesread/flywheel/commit/1acd7441102f419631a826643dd8f2a83c166c55))
+
 ## [1.3.2](https://github.com/jamesread/flywheel/compare/v1.3.1...v1.3.2) (2026-02-14)
 
 
