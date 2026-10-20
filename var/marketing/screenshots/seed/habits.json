@@ -1,0 +1,8 @@
+[
+  {"id": "demo-water", "name": "Drink a glass of water", "createdAt": "2026-01-01T08:00:00.000Z"},
+  {"id": "demo-stretch", "name": "10 minutes of stretching", "createdAt": "2026-01-01T08:00:00.000Z"},
+  {"id": "demo-read", "name": "Read 20 pages", "createdAt": "2026-01-01T08:00:00.000Z"},
+  {"id": "demo-walk", "name": "Walk 8,000 steps", "createdAt": "2026-01-01T08:00:00.000Z"},
+  {"id": "demo-language", "name": "Practise Spanish for 15 minutes", "createdAt": "2026-01-01T08:00:00.000Z"},
+  {"id": "demo-screens", "name": "No screens after 10pm", "createdAt": "2026-01-01T08:00:00.000Z"}
+]
