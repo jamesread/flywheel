@@ -3,6 +3,9 @@
   <h1>Flywheel</h1>
 
   A simple, client-side only Progressive Web App (PWA) for building habits.
+
+[![Maturity Badge](https://img.shields.io/badge/maturity-Sandbox-yellow)](#none)
+
 </div>
 
 ## Features
