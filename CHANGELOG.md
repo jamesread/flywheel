@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/jamesread/flywheel/compare/v1.3.3...v1.4.0) (2026-11-11)
+
+
+### Features
+
+* **ui:** port frontend to picocrank with footer ([756fe66](https://github.com/jamesread/flywheel/commit/756fe66b3cc2f0307c34afb91a35af9f15243772))
+
 ## [1.3.3](https://github.com/jamesread/flywheel/compare/v1.3.2...v1.3.3) (2026-10-02)
 
 
