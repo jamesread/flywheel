@@ -1,7 +1,8 @@
 """Resets the app's localStorage to the fictional seed in ../seed/ and reloads.
 
 Flywheel keeps all state in localStorage (see frontend/src/utils/storage.js),
-so this writes the same keys and formats the app does. Ticks are keyed by
+so this writes the same keys and formats the app does. The PicoCrank theme
+key set by light.py/dark.py is kept. Ticks are keyed by
 today's UTC date, computed in the browser exactly as the app does.
 """
 import json
@@ -23,7 +24,9 @@ def run(driver):
         """
         const [habits, ticked, cacheVersion] = arguments;
         const today = new Date().toISOString().split('T')[0];
+        const theme = localStorage.getItem('picocrank-theme');
         localStorage.clear();
+        if (theme) localStorage.setItem('picocrank-theme', theme);
         localStorage.setItem('flywheel_habits', JSON.stringify(habits));
         localStorage.setItem('flywheel_ticks', JSON.stringify({[today]: ticked}));
         localStorage.setItem('flywheel_cache_version', cacheVersion);

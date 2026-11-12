@@ -28,7 +28,7 @@ screenshots:
     theme: "light"
   - name: "home-dark"
     title: "Dark mode"
-    description: "Flywheel follows your system's light or dark setting automatically."
+    description: "Switch between light and dark with the toggle in the header, or let Flywheel follow your system setting."
     url: "https://raw.githubusercontent.com/jamesread/flywheel/main/var/marketing/screenshots/home-dark.png"
     file: "home-dark.png"
     width: 1280

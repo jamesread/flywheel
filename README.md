@@ -40,7 +40,7 @@ Flywheel is an installable Progressive Web App, so it works like a native app on
 
 ![Dark mode](var/marketing/screenshots/home-dark.png)
 
-Flywheel follows your system's light or dark setting automatically.
+Switch between light and dark with the toggle in the header, or let Flywheel follow your system setting.
 
 Screenshots use fictional test data and are regenerated with `make screenshots`
 (see [`var/marketing/screenshots`](var/marketing/screenshots/README.md)).
